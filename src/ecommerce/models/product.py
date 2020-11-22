@@ -44,7 +44,7 @@ class Product(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        super(self, Product).save(*args, **kwargs)
+        super(Product, self).save(*args, **kwargs)
 
         im = Image.open(self.image)
         width, height = im.size

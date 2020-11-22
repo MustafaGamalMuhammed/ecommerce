@@ -1,0 +1,27 @@
+nav {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: burlywood;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul li {
+    display: inline-block;
+    padding: 5px;
+}
+
+nav a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 18px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}

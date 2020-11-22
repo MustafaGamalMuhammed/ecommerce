@@ -1,0 +1,24 @@
+.home-category {
+    margin: 10px 0;
+}
+
+.home-products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.home-product {
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
+.home-product h3 {
+    text-align: center;
+}
+
+.home-product-img {
+    display: block;
+    margin: auto;
+}

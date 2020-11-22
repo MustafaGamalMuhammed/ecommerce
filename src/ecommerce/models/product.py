@@ -11,13 +11,18 @@ class Category(models.Model):
         return self.name
 
     def get_most_sold_products(self):
-        products = []
+        products = None
 
         for subcategory in self.subcategories.all():
-            products.extend(subcategory.get_most_sold_products())
+            if products == None:
+                products = subcategory.get_most_sold_products()
+            else:
+                products = (products | subcategory.get_most_sold_products())
 
-        return products
-
+        if products:
+            return products.order_by('-sold')[:5]
+        else:
+            return []
 
 class Subcategory(models.Model):
     name = models.CharField(max_length=150)
@@ -27,8 +32,8 @@ class Subcategory(models.Model):
         return f"{self.category.name} => {self.name}"
 
     def get_most_sold_products(self):
-        products = self.products.order_by('-sold')[:15]
-        return list(products)
+        products = self.products.order_by('-sold')[:5]
+        return products
 
 
 class Product(models.Model):

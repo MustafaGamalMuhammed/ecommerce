@@ -1,3 +1,5 @@
 from django.contrib import admin
+from ecommerce import models
 
-# Register your models here.
+
+admin.site.register([models.Category, models.Subcategory, models.Product])

@@ -24,6 +24,8 @@ class Product(models.Model):
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     image = models.ImageField(upload_to="product_images", default="default.jpg")
+    available = models.PositiveIntegerField(default=0)
+    sold = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name

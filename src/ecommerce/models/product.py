@@ -38,6 +38,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to="product_images", default="default.jpg")
     available = models.PositiveIntegerField(default=0)
     sold = models.PositiveIntegerField(default=0)
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name

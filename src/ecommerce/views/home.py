@@ -1,5 +1,10 @@
 from django.shortcuts import render
+from ecommerce.models import Category
 
 
 def home(request):
-    return render(request, 'ecommerce/home.html')
+    context = {
+        'categories': Category.objects.all(),
+    }
+
+    return render(request, 'ecommerce/home.html', context=context)

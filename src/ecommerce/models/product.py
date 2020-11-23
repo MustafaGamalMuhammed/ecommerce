@@ -1,3 +1,4 @@
+from django.shortcuts import reverse
 from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
@@ -30,6 +31,9 @@ class Subcategory(models.Model):
 
     def __str__(self):
         return f"{self.category.name} => {self.name}"
+
+    def get_absolute_url(self):
+        return reverse("shop", args=(self.name,))
 
     def get_most_sold_products(self):
         products = self.products.order_by('-sold')

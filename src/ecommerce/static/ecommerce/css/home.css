@@ -17,6 +17,16 @@
     border-bottom: 1px solid #eee;
 }
 
+.home .categories-links h3 {
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding: 5px;    
+}
+
+.home .categories-links a {
+    text-decoration: none;
+}
+
 .home .home-categories {
     width: 80%;
 }

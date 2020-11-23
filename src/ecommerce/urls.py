@@ -14,6 +14,7 @@ home_urlpatterns = [
 
 shop_urlpatterns = [
     path('shop/', views.shop, name="shop"),
+    path('shop/<str:subcategory>/', views.shop, name="shop"),
 ]
 
 product_urlpatterns = [

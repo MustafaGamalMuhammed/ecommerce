@@ -33,7 +33,7 @@ class Subcategory(models.Model):
         return f"{self.category.name} => {self.name}"
 
     def get_absolute_url(self):
-        return reverse("shop", args=(self.name,))
+        return reverse("shop") + f"?subcategory__name={self.name}"
 
     def get_most_sold_products(self):
         products = self.products.order_by('-sold')
@@ -51,6 +51,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('product', args=(self.id,))
 
     def save(self, *args, **kwargs):
         super(Product, self).save(*args, **kwargs)

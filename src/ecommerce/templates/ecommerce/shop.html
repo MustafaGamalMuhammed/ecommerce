@@ -2,5 +2,22 @@
 {% load static %}
 
 {% block content %}
-    <h1>shop</h1>
+<div class="shop">
+    <main>
+        <div class="left">
+            {% include './categories-links.html' %}
+            <div class="filters">
+                <form id="filters">
+                    <input type="hidden" name="subcategory__name" value="{{ subcategory.name }}">
+                    <label for="price">Maximum Price = <span v-html="maximumPrice"></span></label>
+                    <input v-model:value="maximumPrice" type="range" name="price__lte" max="10000" step="100" id="price">
+                    <input type="submit" value="Filter">
+                </form>
+            </div>
+        </div>
+        <div class="right">
+
+        </div>
+    </main>
+</div>
 {% endblock content %}

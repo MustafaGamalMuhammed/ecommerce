@@ -1,34 +1,36 @@
-.home main {
+main {
     display: flex;
     justify-content: space-between;
 }
 
-.home .categories-links {
+.left {
     width: 15%;
+    min-width: 200px;
     border: 1px solid #eee;
 }
 
-.home .categories-links ul {
+.right {
+    width: 80%;
+    border: 1px solid #eee;
+}
+
+.categories-links ul {
     list-style-type: none;
 }
 
-.home .categories-links li {
+.categories-links li {
     padding: 5px;
     border-bottom: 1px solid #eee;
 }
 
-.home .categories-links h3 {
+.categories-links h3 {
     text-align: center;
     border-bottom: 1px solid #eee;
     padding: 5px;    
 }
 
-.home .categories-links a {
+.categories-links a {
     text-decoration: none;
-}
-
-.home .home-categories {
-    width: 80%;
 }
 
 .home-category {

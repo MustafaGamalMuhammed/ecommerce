@@ -1,11 +1,11 @@
 <nav>
-    <div class="left">
+    <div>
         <ul>
             <li><a href="{% url 'home' %}">HOME</a></li>
             <li><a href="{% url 'shop' %}">SHOP</a></li>
         </ul>
     </div>
-    <div class="right">
+    <div>
         <ul>
             {% if user.is_authenticated %}
             <li><a href="{% url 'logout' %}">LOGOUT</a></li>

@@ -1,0 +1,13 @@
+<div class="categories-links">
+    <h2>CATEGORIES</h2>
+    {% for category in categories %}
+    <div class="category-links">
+        <h3><a href="#">{{ category.name }}</a></h3>
+        <ul>
+            {% for subcategory in category.subcategories.all %}
+            <li><a href="{{ subcategory.get_absolute_url }}">{{ subcategory.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>

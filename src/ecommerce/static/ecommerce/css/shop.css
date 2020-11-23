@@ -1,0 +1,7 @@
+#filters {
+    padding: 5px;
+}
+
+#filters label, #filters input {
+    display: block;
+}

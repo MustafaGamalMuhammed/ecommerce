@@ -14,11 +14,11 @@ home_urlpatterns = [
 
 shop_urlpatterns = [
     path('shop/', views.shop, name="shop"),
-    path('shop/<str:subcategory>/', views.shop, name="shop"),
 ]
 
 product_urlpatterns = [
-    path('product/', views.product, name="product"),
+    path('product/<int:id>/', views.product, name="product"),
+    path('products/', views.products, name="products"),
 ]
 
 cart_urlpatterns = [

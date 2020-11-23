@@ -32,7 +32,7 @@ class Subcategory(models.Model):
         return f"{self.category.name} => {self.name}"
 
     def get_most_sold_products(self):
-        products = self.products.order_by('-sold')[:5]
+        products = self.products.order_by('-sold')
         return products
 
 

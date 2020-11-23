@@ -3,27 +3,46 @@
 
 {% block content %}
 <div class="home">
-    <h1>MOST SOLD PRODUCTS</h1>
-    {% for category in categories %}
-    <div class="home-category">
-        <h2><a href="#">{{ category.name }}</a></h2>
-        <div class="home-products">
-            {% for product in category.get_most_sold_products %}
-            <div class="home-product">
-                <h3><a href="#">{{ product.name }}</a></h3>
-                <div>
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-img">
-                </div>
-                <div class="home-product-price">
-                    {{ product.price }}
-                </div>
-                <div class="home-product-sold">
-                    sold {{ product.sold }} times
+    <main>
+        <div class="categories-links">
+            <h2>CATEGORIES</h2>
+            {% for category in categories %}
+            <div class="category-links">
+                <h3><a href="#">{{ category.name }}</a></h3>
+                <ul>
+                    {% for subcategory in category.subcategories.all %}
+                    <li><a href="#">{{ subcategory.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="home-categories">
+            <h1>MOST SOLD PRODUCTS</h1>
+            {% for category in categories %}
+            <div class="home-category">
+                <h2><a href="#">{{ category.name }}</a></h2>
+                <div class="home-products">
+                    {% for product in category.get_most_sold_products %}
+                    <div class="home-product">
+                        <h3><a href="#">{{ product.name }}</a></h3>
+                        <div class="home-product-img">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        </div>
+                        <div class="home-product-details">
+                            <div class="home-product-price">
+                                {{ product.price }}
+                            </div>
+                            <div class="home-product-sold">
+                                sold {{ product.sold }} times
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
             {% endfor %}
         </div>
-    </div>
-    {% endfor %}
+    </main>
 </div>
 {% endblock content %}

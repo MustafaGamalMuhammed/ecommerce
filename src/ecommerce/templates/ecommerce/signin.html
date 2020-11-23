@@ -2,5 +2,30 @@
 {% load static %}
 
 {% block content %}
-    <h1>signin</h1>
+<div class="signup">   
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="id_username">Username:</label>
+        <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
+        
+        <label for="id_password">Password:</label>
+        <input type="password" name="password" autocomplete="current-password" required="" id="id_password">
+    
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <p>Don't have an account? <a href="{% url 'signup' %}">signup</a></p>
+
+        <input type="submit" value="SIGNIN">
+    </form>
+</div>
 {% endblock content %}

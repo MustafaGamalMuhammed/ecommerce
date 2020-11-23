@@ -2,5 +2,45 @@
 {% load static %}
 
 {% block content %}
-    <h1>signup</h1>
+<div class="signup">
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_username">Username:</label>
+        <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username" placeholder="username"><br>
+        <span class="helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+        
+        <label for="id_email">Email address:</label>
+        <input type="email" name="email" maxlength="254" id="id_email" placeholder="email">
+        
+        <label for="id_password1">Password:</label>
+        <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1" placeholder="password"><br>
+        <span class="helptext">
+            <ul>
+                <li>Your password can’t be too similar to your other personal information.</li>
+                <li>Your password must contain at least 8 characters.</li>
+                <li>Your password can’t be a commonly used password.</li>
+                <li>Your password can’t be entirely numeric.</li>
+            </ul>
+        </span>
+        
+        <label for="id_password2">Password confirmation:</label>
+        <input type="password" name="password2" autocomplete="new-password" required="" id="id_password2" placeholder="password again"><br>
+        <span class="helptext">Enter the same password as before, for verification.</span>
+        
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        <p>Already have an account <a href="{% url 'signin' %}">signin</a></p>
+
+        <input type="submit" value="SIGNUP">
+    </form>
+</div>
 {% endblock content %}

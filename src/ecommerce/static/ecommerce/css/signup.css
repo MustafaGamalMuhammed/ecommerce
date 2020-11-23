@@ -1,0 +1,39 @@
+.signup form {
+    margin: 100px auto;
+    max-width: 500px;
+    border: 1px dashed black;
+    padding: 10px;
+}
+
+.signup form * {
+    display: block;
+    margin: 5px 0;
+}
+
+.signup form a {
+    display: inline;
+}
+
+.signup form input {
+    padding: 5px;
+    width: 50%;
+    min-width: 350px;
+}
+
+.signup form input[type="submit"] {
+    margin: 20px auto 10px;
+    border: 1px solid black;
+    background-color: burlywood;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.signup form input[type="submit"]:hover {
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}

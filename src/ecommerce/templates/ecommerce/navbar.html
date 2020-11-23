@@ -8,9 +8,9 @@
     <div class="right">
         <ul>
             {% if user.is_authenticated %}
-                <li><a href="{% url 'signin' %}">LOGIN</a></li>
+            <li><a href="{% url 'logout' %}">LOGOUT</a></li>
             {% else %}
-                <li><a href="{% url 'logout' %}">LOGOUT</a></li>
+            <li><a href="{% url 'signin' %}">LOGIN</a></li>
             {% endif %}
         </ul>
     </div>

@@ -1,6 +1,7 @@
 from django.shortcuts import reverse
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 from decimal import Decimal
 from PIL import Image
 
@@ -55,6 +56,18 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('product', args=(self.id,))
 
+    @property
+    def rating(self):
+        result = 0
+
+        for review in self.reviews.all():
+            result += review.rating
+
+        if result:
+            return result / self.reviews.count()
+        else:
+            return 0
+
     def save(self, *args, **kwargs):
         super(Product, self).save(*args, **kwargs)
 
@@ -64,3 +77,13 @@ class Product(models.Model):
         if width > 300 or height > 300:
             im.thumbnail((300, 300), Image.ANTIALIAS)
             im.save(self.image.path)
+
+
+class ProductReview(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews", null=True, blank=True)
+    rating = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    content = models.TextField()
+
+    def __str__(self):
+        return f"{self.user.username}'s review, {self.content[:30]}..."

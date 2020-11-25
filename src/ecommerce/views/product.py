@@ -2,10 +2,11 @@ import django
 from django.shortcuts import render, get_object_or_404
 from django.http.request import HttpRequest
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from ecommerce.models import Product, Category
+from ecommerce.models import Product, Category, ProductReview
 
 
 def get_products_data(request:HttpRequest):
@@ -32,16 +33,32 @@ def get_products_data(request:HttpRequest):
     return data
 
 
+def get_review_data(review):
+    r = {}
+    r['id'] = review.id
+    r['username'] = review.user.username
+    r['rating'] = review.rating
+    r['content'] = review.content
+
+    return r
+
+
 def get_product_data(request, product):
     d = {}
     d['id'] = product.id
     d['name'] = product.name
+    d['rating'] = product.rating
     d['price'] = product.price
     d['image'] = product.image.url
     d['url'] = product.get_absolute_url()
     d['description'] = product.description
     d['is_liked'] = product in request.user.profile.likes.all()
     d['is_in_cart'] = product in request.user.profile.cart.products.all()
+    d['reviews'] = []
+
+    for review in product.reviews.all():
+        r = get_review_data(review)    
+        d['reviews'].append(r)
 
     return d
 
@@ -86,3 +103,20 @@ def get_product(request, id):
         return Response(data=data, status=status.HTTP_200_OK)
     except Product.DoesNotExist:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@login_required
+@api_view(['POST'])
+def post_review(request):
+    try:
+        user_id = int(request.data.get('user_id')) 
+        product_id = int(request.data.get('product_id'))
+        rating = int(request.data.get('rating'))
+        content = request.data.get('content')
+
+        review = ProductReview.objects.create(user_id=user_id, product_id=product_id, rating=rating, content=content)
+        data = get_review_data(review)
+        return Response(data=data, status=status.HTTP_200_OK)
+    except (TypeError, django.core.exceptions.FieldError):
+        return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
+        

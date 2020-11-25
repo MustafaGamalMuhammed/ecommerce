@@ -85,6 +85,16 @@ const app = new Vue({
             })
             .catch(err => console.log(err))
         },
+        submitReview: function(e) {
+            let form = document.getElementById("review");
+            let data = new FormData(form);
+            
+            axios.post('/post_review/', data=data)
+            .then(res => {
+                this.getProduct();
+            })
+            .catch(err => console.log(err))
+        },
     },
     mounted: function() {
         axios.defaults.headers['X-CSRFToken'] = Cookies.get('csrftoken');

@@ -20,6 +20,7 @@ product_urlpatterns = [
     path('product/<int:id>/', views.product, name="product"),
     path('products/', views.products, name="products"),
     path('get_product/<int:id>/', views.get_product, name="get_product"),
+    path('post_review/', views.post_review, name="post_review"),
 ]
 
 cart_urlpatterns = [

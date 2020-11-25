@@ -15,6 +15,7 @@
                 <div class="product-details">
                     <h2 v-html="product.name"></h2>
                     <p class="product-price">Price: <span v-html="product.price"></span></p>
+                    <p class="product-rating">Rating <span v-html="product.rating"></span></p>
                     <div class="product-actions">
                         <p><i @click="addToLikes(product)" class="fas fa-heart" :class="{ is_liked: product.is_liked }"></i></p>
                         <p><i @click="addToCart(product)" class="fas fa-cart-plus" :class="{ is_in_cart: product.is_in_cart}"></i></p>
@@ -24,5 +25,21 @@
             </div>
         </div>
     </main>
+    <div class="reviews">
+        {% if user.is_authenticated %}
+        <form id="review">
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <input type="hidden" name="product_id" :value="product.id">
+            <input type="number" name="rating" min="0" max="5" value="0">
+            <textarea name="content" cols="60" rows="6"></textarea>
+            <input type="submit" value="Submit" @click.prevent="submitReview">
+        </form>
+        <div v-for="review in product.reviews" class="review">
+            <p v-html="review.username"></p>
+            <p>rating: <span v-html="review.rating"></span></p>
+            <p v-html="review.content"></p>
+        </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock content %}

@@ -13,3 +13,25 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
+#review {
+    margin: 5px 0;
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
+#review input {
+    display: block;
+    margin: 5px;
+}
+
+#review input[type="submit"] {
+    border: 1px solid black;
+    padding: 5px;
+    background-color: burlywood;
+}
+
+.review {
+    border: 1px solid #eee;
+    padding: 5px;
+}

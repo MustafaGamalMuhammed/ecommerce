@@ -5,6 +5,7 @@ const app = new Vue({
             maximumPrice: 0,
             page: {},
             params: null,
+            cart: null,
         };
     },
     methods: {
@@ -39,6 +40,13 @@ const app = new Vue({
             this.params.set('page', this.page.page - 1);
             this.getProducts(this.params);
         },
+        getCart: function() {
+            axios.get('/get_cart/')
+            .then(res => {
+                this.cart = res.data;
+            })
+            .catch(err => console.log(err))
+        },
     },
     mounted: function() {
         this.params = document.location.search;
@@ -46,6 +54,8 @@ const app = new Vue({
         if(document.location.pathname == "/shop/") {
             this.getProducts(document.location.search);
         }
+    
+        this.getCart();
     },
     watch: {},
 });

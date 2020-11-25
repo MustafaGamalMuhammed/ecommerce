@@ -23,6 +23,7 @@ product_urlpatterns = [
 
 cart_urlpatterns = [
     path('cart/', views.cart, name="cart"),
+    path('get_cart/', views.get_cart, name="get_cart"),
 ]
 
 urlpatterns = []

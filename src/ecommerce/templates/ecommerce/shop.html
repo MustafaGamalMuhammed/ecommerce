@@ -35,6 +35,11 @@
                         <p v-html="product.description" class="product-description"></p>
                     </div>
                 </div>
+                <div class="pagination">
+                    <button v-if="page.has_previous" @click=getPreviousPage>&lt;</button>
+                    <span v-html="page.page"></span>
+                    <button v-if="page.has_next" @click="getNextPage">&gt;</button>
+                </div>
             </div>
         </div>
     </main>

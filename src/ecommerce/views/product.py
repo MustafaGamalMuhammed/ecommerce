@@ -23,10 +23,13 @@ def get_products_data(request:HttpRequest):
 
     for product in products:
         d = {}
+        d['id'] = product.id
         d['name'] = product.name
         d['price'] = product.price
         d['image'] = product.image.url
         d['url'] = product.get_absolute_url()
+        d['is_liked'] = product in request.user.profile.likes.all()
+        d['is_in_cart'] = product in request.user.profile.cart.products.all()
         data.append(d)
 
     return data

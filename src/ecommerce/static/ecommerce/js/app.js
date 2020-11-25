@@ -55,8 +55,29 @@ const app = new Vue({
             })
             .catch(err => console.log(err))
         },
+        addToLikes: function(product) {
+            if(!product.is_liked) {
+                axios.post(`/like/${product.id}/`)
+                .then(res => {
+                    product.is_liked = true;
+                    this.likes = res.data;
+                })
+                .catch(err => console.log(err))
+            }
+        },
+        addToCart: function(product) {
+            if(!product.is_in_cart) {
+                axios.post(`/add_to_cart/${product.id}/`)
+                .then(res => {
+                    product.is_in_cart = true;
+                    this.cart = res.data;
+                })
+                .catch(err => console.log(err))
+            }
+        },
     },
     mounted: function() {
+        axios.defaults.headers['X-CSRFToken'] = Cookies.get('csrftoken');
         this.params = document.location.search;
 
         if(document.location.pathname == "/shop/") {

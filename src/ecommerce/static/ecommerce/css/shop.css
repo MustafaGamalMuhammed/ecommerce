@@ -35,6 +35,9 @@
 }
 
 .product-details {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
     border-left: 1px solid #eee;
     padding: 5px;
 }
@@ -72,4 +75,26 @@
 
 .pagination button:hover {
     cursor: pointer;
+}
+
+.product-actions {
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 30px;
+}
+
+.product-actions i {
+    display: block;
+}
+
+.product-actions i:hover {
+    cursor: pointer;
+}
+
+.is_liked {
+    color: rgb(240, 58, 58);
+}
+
+.is_in_cart {
+    color: burlywood;
 }

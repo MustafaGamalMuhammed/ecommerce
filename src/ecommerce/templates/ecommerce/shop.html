@@ -33,6 +33,10 @@
                         <p><a href="product.url" v-html="product.name" class="product-name"></a></p>
                         <p class="product-price">Price: <span v-html="product.price"></span></p>
                         <p v-html="product.description" class="product-description"></p>
+                        <div class="product-actions">
+                            <p><i @click="addToLikes(product)" class="fas fa-heart" :class="{ is_liked: product.is_liked }"></i></p>
+                            <p><i @click="addToCart(product)" class="fas fa-shopping-cart" :class="{ is_in_cart: product.is_in_cart}"></i></p>
+                        </div>
                     </div>
                 </div>
                 <div class="pagination">

@@ -5,3 +5,38 @@
 #filters label, #filters input {
     display: block;
 }
+
+.product {
+    display: flex;
+    border: 1px solid #eee;
+    padding: 5px;
+}
+
+.product-img a {
+    display: block;
+    width: 200px;
+    height: 200px;
+}
+
+.product-img img {
+    display: block;
+    margin: auto;
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.product-details {
+    border-left: 1px solid #eee;
+    padding: 5px;
+}
+
+.product-name {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    font-weight: bold;
+}
+
+.product-name:hover {
+    text-decoration: underline;
+}

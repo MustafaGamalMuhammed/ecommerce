@@ -13,7 +13,10 @@ def product(request, id):
 
 def get_products_data(request:HttpRequest):
     params = request.GET.dict()
-    params.pop('page')
+    
+    if params.get('page'):
+        params.pop('page')
+    
     products = Product.objects.filter(**params)
     data = []
 
@@ -30,13 +33,10 @@ def get_products_data(request:HttpRequest):
 
 def get_page_data(request:HttpRequest):
     page_data = dict()
-    page = request.GET.dict().pop('page')
+    page = request.GET.get('page', 1)
     paginator = Paginator(get_products_data(request), 9)
 
-    if page:
-        products_page = paginator.get_page(page)
-    else:
-        products_page = paginator.get_page(1)
+    products_page = paginator.get_page(page)
 
     page_data['page'] = page
     page_data['products'] = products_page.object_list

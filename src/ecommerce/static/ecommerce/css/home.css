@@ -11,7 +11,8 @@ main {
 
 .right {
     width: 80%;
-    border: 1px solid #eee;
+    /* border: 1px solid #eee; */
+    padding: 5px;
 }
 
 .categories-links ul {

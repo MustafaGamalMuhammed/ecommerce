@@ -16,7 +16,21 @@
             </div>
         </div>
         <div class="right">
-
+            <h2>{{ subcategory.name }}</h2>
+            <div class="products">
+                <div  v-for="product in page.products" class="product">
+                    <div class="product-img">
+                        <a :href="product.url">
+                            <img :src="product.image" :alt="product.name">
+                        </a>
+                    </div>
+                    <div class="product-details">
+                        <p><a href="product.url" v-html="product.name" class="product-name"></a></p>
+                        <p class="product-price">Price: <span v-html="product.price"></span></p>
+                        <p v-html="product.description" class="product-description"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </div>

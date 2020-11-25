@@ -12,7 +12,7 @@ def cart(request):
 
 def get_cart_data(request):
     data = {}
-    data['products_count'] = request.user.cart.products.count()
+    data['products_count'] = request.user.profile.cart.products.count()
 
     return data
 

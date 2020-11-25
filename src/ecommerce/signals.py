@@ -1,10 +1,12 @@
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from ecommerce.models import Cart
+from ecommerce.models import Profile, Cart
 
 
-def create_cart(sender, instance, **kwargs):
-    Cart.objects.get_or_create(user=instance)
+def create_profile(sender, instance, **kwargs):
+    cart = Cart()
+    cart.save()
+    Profile.objects.get_or_create(user=instance, cart=cart)
 
 
-post_save.connect(create_cart, sender=User)
+post_save.connect(create_profile, sender=User)

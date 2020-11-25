@@ -1,15 +1,11 @@
 import django
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http.request import HttpRequest
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from ecommerce.models import Product
-
-
-def product(request, id):
-    return render(request, 'ecommerce/product.html')
+from ecommerce.models import Product, Category
 
 
 def get_products_data(request:HttpRequest):
@@ -28,11 +24,26 @@ def get_products_data(request:HttpRequest):
         d['price'] = product.price
         d['image'] = product.image.url
         d['url'] = product.get_absolute_url()
+        d['description'] = product.description
         d['is_liked'] = product in request.user.profile.likes.all()
         d['is_in_cart'] = product in request.user.profile.cart.products.all()
         data.append(d)
 
     return data
+
+
+def get_product_data(request, product):
+    d = {}
+    d['id'] = product.id
+    d['name'] = product.name
+    d['price'] = product.price
+    d['image'] = product.image.url
+    d['url'] = product.get_absolute_url()
+    d['description'] = product.description
+    d['is_liked'] = product in request.user.profile.likes.all()
+    d['is_in_cart'] = product in request.user.profile.cart.products.all()
+
+    return d
 
 
 def get_page_data(request:HttpRequest):
@@ -50,10 +61,28 @@ def get_page_data(request:HttpRequest):
     return page_data
 
 
+def product(request, id):
+    context = {
+        'categories': Category.objects.all(),
+    }
+
+    return render(request, 'ecommerce/product.html', context=context)
+
+
 @api_view(['GET'])
 def products(request:HttpRequest):
     try:
         data = get_page_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
     except django.core.exceptions.FieldError:
+        return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_product(request, id):
+    try:
+        product = get_object_or_404(Product, id=id)
+        data = get_product_data(request, product)
+        return Response(data=data, status=status.HTTP_200_OK)
+    except Product.DoesNotExist:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

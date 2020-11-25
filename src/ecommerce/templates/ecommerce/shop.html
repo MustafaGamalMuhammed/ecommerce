@@ -8,7 +8,9 @@
             {% include './categories-links.html' %}
             <div class="filters">
                 <form id="filters" method="GET">
+                    {% if subcategory %}
                     <input type="hidden" name="subcategory__name" value="{{ subcategory.name }}">
+                    {% endif %}
                     <label for="price">Maximum Price = <span v-html="maximumPrice"></span></label>
                     <input v-model:value="maximumPrice" type="range" name="price__lte" max="10000" step="100" id="price">
                     <input @click.prevent="submitFilters" type="submit" value="Filter">
@@ -35,7 +37,7 @@
                         <p v-html="product.description" class="product-description"></p>
                         <div class="product-actions">
                             <p><i @click="addToLikes(product)" class="fas fa-heart" :class="{ is_liked: product.is_liked }"></i></p>
-                            <p><i @click="addToCart(product)" class="fas fa-shopping-cart" :class="{ is_in_cart: product.is_in_cart}"></i></p>
+                            <p><i @click="addToCart(product)" class="fas fa-cart-plus" :class="{ is_in_cart: product.is_in_cart}"></i></p>
                         </div>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ const app = new Vue({
             params: null,
             cart: null,
             likes: null,
+            product: null,
         };
     },
     methods: {
@@ -75,6 +76,15 @@ const app = new Vue({
                 .catch(err => console.log(err))
             }
         },
+        getProduct: function() {
+            let id = document.location.pathname.split("/")[2];
+
+            axios.get(`/get_product/${id}/`)
+            .then(res => {
+                this.product = res.data;
+            })
+            .catch(err => console.log(err))
+        },
     },
     mounted: function() {
         axios.defaults.headers['X-CSRFToken'] = Cookies.get('csrftoken');
@@ -82,6 +92,10 @@ const app = new Vue({
 
         if(document.location.pathname == "/shop/") {
             this.getProducts(document.location.search);
+        }
+
+        if(document.location.pathname.startsWith("/product/")) {
+            this.getProduct();
         }
     
         this.getCart();

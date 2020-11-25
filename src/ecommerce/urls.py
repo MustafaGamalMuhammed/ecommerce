@@ -19,6 +19,7 @@ shop_urlpatterns = [
 product_urlpatterns = [
     path('product/<int:id>/', views.product, name="product"),
     path('products/', views.products, name="products"),
+    path('get_product/<int:id>/', views.get_product, name="get_product"),
 ]
 
 cart_urlpatterns = [

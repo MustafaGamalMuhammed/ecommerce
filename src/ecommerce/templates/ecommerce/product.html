@@ -2,5 +2,27 @@
 {% load static %}
 
 {% block content %}
-    <h1>product</h1>
+<div>
+    <main>
+        <div class="left">
+            {% include './categories-links.html' %}
+        </div>
+        <div class="right">
+            <div class="product-big">
+                <div class="product-img">
+                    <img :src="product.image" :alt="product.name">
+                </div>
+                <div class="product-details">
+                    <h2 v-html="product.name"></h2>
+                    <p class="product-price">Price: <span v-html="product.price"></span></p>
+                    <div class="product-actions">
+                        <p><i @click="addToLikes(product)" class="fas fa-heart" :class="{ is_liked: product.is_liked }"></i></p>
+                        <p><i @click="addToCart(product)" class="fas fa-cart-plus" :class="{ is_in_cart: product.is_in_cart}"></i></p>
+                    </div>
+                    <p v-html="product.description"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 {% endblock content %}

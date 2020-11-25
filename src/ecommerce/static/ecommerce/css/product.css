@@ -1,0 +1,15 @@
+.product-big .product-img img {
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.product-big {
+    display: flex;
+    border: 1px solid #eee;
+}
+
+.product-big .product-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

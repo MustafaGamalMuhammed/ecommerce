@@ -7,8 +7,8 @@ const app = new Vue({
         };
     },
     methods: {
-        getProducts: function() {
-            axios.get(`/products/${document.location.search}`)
+        getProducts: function(params) {
+            axios.get(`/products/${params}`)
             .then(res => {
                 console.log(res.data);
                 this.page = res.data;
@@ -17,10 +17,16 @@ const app = new Vue({
                 console.log(err);
             })
         },
+        submitFilters: function(e) {
+            let form = document.getElementById("filters");
+            let data = new FormData(form);
+            let params = new URLSearchParams(data);
+            this.getProducts(`?${params.toString()}`);
+        },
     },
     mounted: function() {
         if(document.location.pathname == "/shop/") {
-            this.getProducts();
+            this.getProducts(document.location.search);
         }
     },
     watch: {},

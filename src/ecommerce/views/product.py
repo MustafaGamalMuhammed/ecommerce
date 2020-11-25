@@ -1,3 +1,4 @@
+import django
 from django.shortcuts import render
 from django.http.request import HttpRequest
 from django.core.paginator import Paginator
@@ -46,4 +47,8 @@ def get_page_data(request:HttpRequest):
 
 @api_view(['GET'])
 def products(request:HttpRequest):
-    return Response(data=get_page_data(request), status=status.HTTP_200_OK)
+    try:
+        data = get_page_data(request)
+        return Response(data=data, status=status.HTTP_200_OK)
+    except django.core.exceptions.FieldError:
+        return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

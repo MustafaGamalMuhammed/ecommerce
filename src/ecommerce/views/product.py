@@ -34,13 +34,15 @@ def get_products_data(request:HttpRequest):
 
 def get_page_data(request:HttpRequest):
     page_data = dict()
-    page = request.GET.get('page', 1)
+    page = int(request.GET.get('page', 1))
     paginator = Paginator(get_products_data(request), 9)
 
     products_page = paginator.get_page(page)
 
     page_data['page'] = page
     page_data['products'] = products_page.object_list
+    page_data['has_previous'] = products_page.has_previous()
+    page_data['has_next'] = products_page.has_next()
 
     return page_data
 

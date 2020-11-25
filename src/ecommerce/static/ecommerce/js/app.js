@@ -4,10 +4,18 @@ const app = new Vue({
         return {
             maximumPrice: 0,
             page: {},
+            params: null,
         };
     },
     methods: {
         getProducts: function(params) {
+            if(typeof(params) == "string") {
+                this.params = new URLSearchParams(params);
+            } else if(typeof(params) == "object") {
+                this.params = params;
+                params = `?${params.toString()}`;
+            }
+            
             axios.get(`/products/${params}`)
             .then(res => {
                 console.log(res.data);
@@ -21,10 +29,20 @@ const app = new Vue({
             let form = document.getElementById("filters");
             let data = new FormData(form);
             let params = new URLSearchParams(data);
-            this.getProducts(`?${params.toString()}`);
+            this.getProducts(params);
+        },
+        getNextPage: function() {
+            this.params.set('page', this.page.page + 1);
+            this.getProducts(this.params);
+        },
+        getPreviousPage: function() {
+            this.params.set('page', this.page.page - 1);
+            this.getProducts(this.params);
         },
     },
     mounted: function() {
+        this.params = document.location.search;
+
         if(document.location.pathname == "/shop/") {
             this.getProducts(document.location.search);
         }

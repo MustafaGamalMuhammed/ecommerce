@@ -40,3 +40,27 @@
 .product-name:hover {
     text-decoration: underline;
 }
+
+.pagination {
+    text-align: center;
+    padding: 5px;
+    font-size: 20px;
+}
+
+.pagination button,
+.pagination span {
+    display: inline-block;
+}
+
+.pagination button {
+    border: 1px solid black;
+    padding: 5px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: burlywood;
+    border-radius: 5px;
+}
+
+.pagination button:hover {
+    cursor: pointer;
+}

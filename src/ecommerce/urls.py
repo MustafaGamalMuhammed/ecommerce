@@ -26,9 +26,15 @@ cart_urlpatterns = [
     path('get_cart/', views.get_cart, name="get_cart"),
 ]
 
+likes_urlpatterns = [
+    path('likes/', views.likes, name="likes"),
+    path('get_likes/', views.get_likes, name="get_likes"),
+]
+
 urlpatterns = []
 urlpatterns.extend(authentication_urlpatterns)
 urlpatterns.extend(shop_urlpatterns)
 urlpatterns.extend(product_urlpatterns)
 urlpatterns.extend(cart_urlpatterns)
 urlpatterns.extend(home_urlpatterns)
+urlpatterns.extend(likes_urlpatterns)

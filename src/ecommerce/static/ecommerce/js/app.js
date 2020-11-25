@@ -6,6 +6,7 @@ const app = new Vue({
             page: {},
             params: null,
             cart: null,
+            likes: null,
         };
     },
     methods: {
@@ -47,6 +48,13 @@ const app = new Vue({
             })
             .catch(err => console.log(err))
         },
+        getLikes: function() {
+            axios.get('/get_likes/')
+            .then(res => {
+                this.likes = res.data;
+            })
+            .catch(err => console.log(err))
+        },
     },
     mounted: function() {
         this.params = document.location.search;
@@ -56,6 +64,7 @@ const app = new Vue({
         }
     
         this.getCart();
+        this.getLikes();
     },
     watch: {},
 });

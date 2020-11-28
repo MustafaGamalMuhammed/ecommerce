@@ -8,3 +8,12 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Cart"
+
+    @property
+    def total_price(self):
+        total = 0
+
+        for product in self.products.all():
+            total += product.price
+
+        return total

@@ -18,8 +18,12 @@ def get_product_data(request, product):
     d['image'] = product.image.url
     d['url'] = product.get_absolute_url()
     d['description'] = product.description
-    d['is_liked'] = product in request.user.profile.likes.all()
-    d['is_in_cart'] = product in request.user.profile.cart.products.all()
+    d['is_authenticated'] = request.user.is_authenticated
+
+    if request.user.is_authenticated:
+        d['is_liked'] = product in request.user.profile.likes.all()
+        d['is_in_cart'] = product in request.user.profile.cart.products.all()
+    
     d['reviews'] = []
 
     for review in product.reviews.all():

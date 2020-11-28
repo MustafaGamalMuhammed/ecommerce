@@ -16,7 +16,7 @@
                     <h2 v-html="product.name"></h2>
                     <p class="product-price">Price: <span v-html="product.price"></span></p>
                     <p class="product-rating">Rating <span v-html="product.rating"></span></p>
-                    <div class="product-actions">
+                    <div v-if="product.is_authenticated" class="product-actions">
                         <p><i @click="addToLikes(product)" class="fas fa-heart" :class="{ is_liked: product.is_liked }"></i></p>
                         <p><i @click="addToCart(product)" class="fas fa-cart-plus" :class="{ is_in_cart: product.is_in_cart}"></i></p>
                     </div>

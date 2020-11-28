@@ -4,9 +4,11 @@ from ecommerce.models import Profile, Cart
 
 
 def create_profile(sender, instance, **kwargs):
-    cart = Cart()
-    cart.save()
-    Profile.objects.get_or_create(user=instance, cart=cart)
-
+    profile, created = Profile.objects.get_or_create(user=instance)
+    if created:
+        cart = Cart()
+        cart.save()
+        profile.cart = cart
+        profile.save()
 
 post_save.connect(create_profile, sender=User)

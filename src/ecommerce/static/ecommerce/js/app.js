@@ -21,7 +21,6 @@ const app = new Vue({
             
             axios.get(`/products/${params}`)
             .then(res => {
-                console.log(res.data);
                 this.page = res.data;
             })
             .catch(err => {

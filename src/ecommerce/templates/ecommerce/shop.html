@@ -32,8 +32,9 @@
                         </a>
                     </div>
                     <div class="product-details">
-                        <p><a href="product.url" v-html="product.name" class="product-name"></a></p>
+                        <p><a :href="product.url" v-html="product.name" class="product-name"></a></p>
                         <p class="product-price">Price: <span v-html="product.price"></span></p>
+                        <p class="product-rating">Rating: <span v-html="product.rating"></span></p>
                         <p v-html="product.description" class="product-description"></p>
                         <div class="product-actions">
                             <p><i @click="addToLikes(product)" class="fas fa-heart" :class="{ is_liked: product.is_liked }"></i></p>

@@ -1,7 +1,34 @@
 {% extends './base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="likes">
-    <h1>likes</h1>
+<div class="shop">
+    <main>
+        <div class="left">
+            {% include './categories-links.html' %}
+        </div>
+        <div class="right">
+            <h2>Liked Products</h2>
+            <div class="products">
+                <div  v-for="product in likes.products" class="product">
+                    <div class="product-img">
+                        <a :href="product.url">
+                            <img :src="product.image" :alt="product.name">
+                        </a>
+                    </div>
+                    <div class="product-details">
+                        <p><a :href="product.url" v-html="product.name" class="product-name"></a></p>
+                        <p class="product-price">Price: <span v-html="product.price"></span></p>
+                        <p class="product-rating">Rating: <span v-html="product.rating"></span></p>
+                        <p v-html="product.description" class="product-description"></p>
+                        <div class="product-actions">
+                            <p><i @click="addToLikes(product)" class="fas fa-heart" :class="{ is_liked: product.is_liked }"></i></p>
+                            <p><i @click="addToCart(product)" class="fas fa-cart-plus" :class="{ is_in_cart: product.is_in_cart}"></i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 {% endblock content %}

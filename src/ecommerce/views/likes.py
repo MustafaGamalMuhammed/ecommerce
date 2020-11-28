@@ -3,19 +3,29 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from ecommerce.models import Profile, Product
-
-
-@login_required
-def likes(request):
-    return render(request, 'ecommerce/likes.html')
+from ecommerce.models import Profile, Product, Category
+from .product import get_product_data
 
 
 def get_likes_data(request):
     data = {}
     data['products_count'] = request.user.profile.likes.count()
+    data['products'] = []
+
+    for product in request.user.profile.likes.all():
+        d = get_product_data(request, product)
+        data['products'].append(d)
 
     return data
+
+
+@login_required
+def likes(request):
+    context = {
+        'categories': Category.objects.all(),
+    }
+
+    return render(request, 'ecommerce/likes.html', context=context)
 
 
 @login_required

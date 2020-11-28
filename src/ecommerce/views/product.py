@@ -9,40 +9,6 @@ from rest_framework import status
 from ecommerce.models import Product, Category, ProductReview
 
 
-def get_products_data(request:HttpRequest):
-    params = request.GET.dict()
-    
-    if params.get('page'):
-        params.pop('page')
-    
-    products = Product.objects.filter(**params)
-    data = []
-
-    for product in products:
-        d = {}
-        d['id'] = product.id
-        d['name'] = product.name
-        d['price'] = product.price
-        d['image'] = product.image.url
-        d['url'] = product.get_absolute_url()
-        d['description'] = product.description
-        d['is_liked'] = product in request.user.profile.likes.all()
-        d['is_in_cart'] = product in request.user.profile.cart.products.all()
-        data.append(d)
-
-    return data
-
-
-def get_review_data(review):
-    r = {}
-    r['id'] = review.id
-    r['username'] = review.user.username
-    r['rating'] = review.rating
-    r['content'] = review.content
-
-    return r
-
-
 def get_product_data(request, product):
     d = {}
     d['id'] = product.id
@@ -61,6 +27,32 @@ def get_product_data(request, product):
         d['reviews'].append(r)
 
     return d
+
+
+def get_products_data(request:HttpRequest):
+    params = request.GET.dict()
+    
+    if params.get('page'):
+        params.pop('page')
+    
+    products = Product.objects.filter(**params)
+    data = []
+
+    for product in products:
+        d = get_product_data(request, product)
+        data.append(d)
+
+    return data
+
+
+def get_review_data(review):
+    r = {}
+    r['id'] = review.id
+    r['username'] = review.user.username
+    r['rating'] = review.rating
+    r['content'] = review.content
+
+    return r
 
 
 def get_page_data(request:HttpRequest):

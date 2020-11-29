@@ -8,6 +8,7 @@ const app = new Vue({
             cart: null,
             likes: null,
             product: null,
+            profile: null,
         };
     },
     methods: {
@@ -105,7 +106,23 @@ const app = new Vue({
         deleteCartItem: function(item) {
             item['delete'] = true;
             console.log(item.delete);
-        }
+        },
+        getProfile: function() {
+            let id = document.location.pathname.split("/")[2]
+
+            axios.get(`/get_profile/${id}/`)
+            .then(res => {
+                this.profile = res.data;
+            })
+            .catch(err => console.log(err))
+        },
+        updateProfile: function() {
+            axios.post('/update_profile/', data=this.profile)
+            .then(res => {
+                this.profile = res.data;
+            })
+            .catch(err => console.log(err))
+        },
     },
     mounted: function() {
         axios.defaults.headers['X-CSRFToken'] = Cookies.get('csrftoken');
@@ -117,6 +134,10 @@ const app = new Vue({
 
         if(document.location.pathname.startsWith("/product/")) {
             this.getProduct();
+        }
+
+        if(document.location.pathname.startsWith("/profile/")) {
+            this.getProfile();
         }
     
         this.getCart();

@@ -36,6 +36,12 @@ likes_urlpatterns = [
     path('like/<int:id>/', views.like, name="like"),
 ]
 
+profile_urlpatterns = [
+    path('profile/<int:id>/', views.profile, name="profile"),
+    path('get_profile/<int:id>/', views.get_profile, name="get_profile"),
+    path('update_profile/', views.update_profile, name="update_profile"),
+]
+
 urlpatterns = []
 urlpatterns.extend(authentication_urlpatterns)
 urlpatterns.extend(shop_urlpatterns)
@@ -43,3 +49,4 @@ urlpatterns.extend(product_urlpatterns)
 urlpatterns.extend(cart_urlpatterns)
 urlpatterns.extend(home_urlpatterns)
 urlpatterns.extend(likes_urlpatterns)
+urlpatterns.extend(profile_urlpatterns)

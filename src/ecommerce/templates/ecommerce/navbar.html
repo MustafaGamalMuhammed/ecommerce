@@ -10,6 +10,7 @@
             {% if user.is_authenticated %}
             <li><a href="{% url 'likes' %}"><i class="fas fa-heart"></i>(<span v-html="likes.products_count"></span>)</a></li>
             <li><a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i>(<span v-html="cart.items_count"></span>)</a></li>
+            <li><a href="{{ user.profile.get_absolute_url }}">{{ user.username }}</a></li>
             <li><a href="{% url 'logout' %}">LOGOUT</a></li>
             {% else %}
             <li><a href="{% url 'signin' %}">LOGIN</a></li>

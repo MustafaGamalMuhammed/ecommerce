@@ -57,10 +57,8 @@ def get_cart(request):
 @login_required
 @api_view(['POST'])
 def update_cart(request):
-    try:
-        data = request.data
-        
-        for item in data['items']:
+    try:    
+        for item in request.data['items']:
             cart_item = CartItem.objects.get(id=int(item['id']))
             
             if item.get('delete', False):

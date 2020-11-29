@@ -1,0 +1,25 @@
+#add_product_button {
+    border: 1px dashed black;
+    background-color: burlywood;
+    text-align: center;
+    padding: 5px;
+}
+
+#add_product_button:hover {
+    cursor: pointer;
+}
+
+#post_product {
+    display: none;
+}
+
+.post_product {
+    margin: 10px 0;
+    border: 1px dashed black;
+    padding: 5px;
+}
+
+.post_product * {
+    display: block;
+    margin: 5px 0;
+}

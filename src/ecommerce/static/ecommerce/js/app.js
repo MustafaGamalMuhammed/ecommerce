@@ -105,7 +105,6 @@ const app = new Vue({
         },
         deleteCartItem: function(item) {
             item['delete'] = true;
-            console.log(item.delete);
         },
         getProfile: function() {
             let id = document.location.pathname.split("/")[2]
@@ -122,6 +121,18 @@ const app = new Vue({
                 this.profile = res.data;
             })
             .catch(err => console.log(err))
+        },
+        deleteProfileProduct: function(product) {
+            product['delete'] = true;
+        },
+        showPostProduct: function() {
+            let postProduct = document.getElementById('post_product');
+            
+            if(postProduct.style.display == "") {
+                postProduct.style.display = "block";
+            } else {
+                postProduct.style.display = "";
+            }
         },
     },
     mounted: function() {

@@ -9,7 +9,23 @@
         </div>
         <div class="right">
             <h2><span v-html="profile.username"></span>'s Profile</h2>
+            <div v-if="profile.user_profile">
+                <div @click="showPostProduct" id="add_product_button">ADD PRODUCT</div>
+                <form 
+                    method="POST" 
+                    action="{% url 'post_product' %}" 
+                    class="post_product" 
+                    id="post_product"
+                    enctype="multipart/form-data">
+                    
+                    {% csrf_token %}
+                    <input type="hidden" name="seller_id" value="{{ user.profile.id }}">
+                    {{ form }}
+                    <input type="submit" value="submit">
+                </form>
+            </div>
             <div class="products">
+                <h2>Products</h2>
                 <div v-for="product in profile.products">
                     <div  v-if="!product.delete" class="product">
                         <div class="product-img">

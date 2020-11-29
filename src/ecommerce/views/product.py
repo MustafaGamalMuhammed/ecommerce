@@ -1,12 +1,14 @@
 import django
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http.request import HttpRequest
 from django.core.paginator import Paginator
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ecommerce.models import Product, Category, ProductReview
+from ecommerce.forms import ProductForm
 
 
 def get_products_data(request:HttpRequest):
@@ -67,6 +69,17 @@ def get_product(request, id):
 
 
 @login_required
+@require_POST
+def post_product(request):
+    form = ProductForm(request.POST, request.FILES)
+    if form.is_valid():
+        product = Product.objects.create(seller_id=int(request.POST.get('seller_id')), **form.cleaned_data)
+    
+    return redirect(request.user.profile)    
+
+
+
+@login_required
 @api_view(['POST'])
 def post_review(request):
     try:
@@ -80,4 +93,3 @@ def post_review(request):
         return Response(data=data, status=status.HTTP_200_OK)
     except (TypeError, django.core.exceptions.FieldError):
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
-        

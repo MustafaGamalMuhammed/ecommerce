@@ -4,11 +4,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ecommerce.models import Profile, Category, Product
+from ecommerce.forms import ProductForm
 
 
 def get_profile_data(request, profile):
     data = {}
     data['user_profile'] = (request.user.profile == profile)
+    data['id'] = profile.id
     data['username'] = profile.user.username
     data['products'] = []
 
@@ -23,6 +25,7 @@ def get_profile_data(request, profile):
 def profile(request, id):
     context = {
         'categories': Category.objects.all(),
+        'form': ProductForm(),
     }
 
     return render(request, 'ecommerce/profile.html', context=context)

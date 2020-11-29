@@ -1,0 +1,26 @@
+.cart-product {
+    border: 1px solid #eee;
+    display: flex;
+}
+
+.cart-product div {
+    border-left: 1px solid #eee;
+}
+
+.cart-product-img a {
+    display: block;
+    width: 200px;
+    height: 200px;
+}
+
+.cart-product-img img {
+    display: block;
+    margin: auto;
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.delete {
+    text-decoration: line-through;
+    color: red;
+}

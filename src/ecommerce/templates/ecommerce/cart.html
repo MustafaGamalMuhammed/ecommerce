@@ -2,5 +2,53 @@
 {% load static %}
 
 {% block content %}
-    <h1>cart</h1>
+<div class="cart">
+    <main>
+        <div class="left">
+            {% include './categories-links.html' %}
+        </div>
+        <div class="right">
+            <h2>Cart</h2>
+            <div class="products">
+                <div v-for="item in cart.items">
+                    <div  v-if="!item.delete" class="product">
+                        <div class="product-img">
+                            <a :href="item.product.url">
+                                <img :src="item.product.image" :alt="item.product.name">
+                            </a>
+                        </div>
+                        <div class="product-details">
+                            <p><a :href="item.product.url" v-html="item.product.name" class="product-name"></a></p>
+                            <p class="product-price">Price: <span v-html="item.product.price"></span></p>
+                            <p class="product-rating">Rating: <span v-html="item.product.rating"></span></p>
+                            <p v-html="item.product.description" class="product-description"></p>
+                        </div>
+                        <div class="cart-item-quantity">
+                            <p>quantity</p>
+                            <input 
+                                type="number" 
+                                :name="item.id + quantity" 
+                                min="1" 
+                                :max="item.product.available" 
+                                v-model:value="item.quantity">
+                        </div>
+                        <div class="cart-item-total-price">
+                            <p>total price</p>
+                            <p v-html="item.product.price * item.quantity"></p>
+                        </div>
+                        <div class="cart-item-delete">
+                            <button @click="deleteCartItem(item)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2>Total Price: <span v-html="cartTotalPrice"></span></h2>
+                </div>
+                <div class="update-cart">
+                    <button @click="updateCart">Update Cart</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 {% endblock content %}

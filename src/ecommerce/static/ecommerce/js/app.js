@@ -94,6 +94,18 @@ const app = new Vue({
             })
             .catch(err => console.log(err))
         },
+        updateCart: function(e) {
+            axios.post('/update_cart/', data=this.cart)
+            .then(res => {
+                console.log(res.data);
+                this.cart = res.data;
+            })
+            .catch(err => console.log(err))
+        },
+        deleteCartItem: function(item) {
+            item['delete'] = true;
+            console.log(item.delete);
+        }
     },
     mounted: function() {
         axios.defaults.headers['X-CSRFToken'] = Cookies.get('csrftoken');
@@ -109,6 +121,19 @@ const app = new Vue({
     
         this.getCart();
         this.getLikes();
+    },
+    computed: {
+        cartTotalPrice: function() {
+            total = 0;
+
+            for(let item of this.cart.items) {
+                if(!item.delete) {
+                    total = total + item.quantity * item.product.price;
+                }
+            }
+
+            return total
+        }
     },
     watch: {},
 });

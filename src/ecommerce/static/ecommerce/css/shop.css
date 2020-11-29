@@ -18,6 +18,10 @@
 .product {
     display: flex;
     border: 1px solid #eee;
+}
+
+.product > div {
+    border-left: 1px solid #eee;
     padding: 5px;
 }
 
@@ -38,8 +42,8 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    border-left: 1px solid #eee;
     padding: 5px;
+    width: 300px;
 }
 
 .product-name {

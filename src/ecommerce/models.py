@@ -43,6 +43,7 @@ class Subcategory(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=150)
+    seller = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="products")
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name="products")
     price = models.DecimalField(max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     image = models.ImageField(upload_to="product_images", default="default.jpg")
@@ -87,3 +88,44 @@ class ProductReview(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s review, {self.content[:30]}..."
+
+
+class CartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    @property
+    def total_price(self):
+        return self.product.price * self.quantity
+
+
+class Cart(models.Model):
+    items = models.ManyToManyField(CartItem, blank=True)
+
+    @property
+    def total_price(self):
+        total = 0
+
+        for item in self.items.all():
+            total += item.total_price
+
+        return total
+
+    def has_product(self, product):
+        for item in self.items.all():
+            if product.id == item.product.id:
+                return True
+        
+        return False
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cart = models.OneToOneField(Cart, null=True, on_delete=models.SET_NULL, related_name="profile")
+    likes = models.ManyToManyField(Product, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
+    def get_absolute_url(self):
+        return reverse('profile', args=(self.id,))

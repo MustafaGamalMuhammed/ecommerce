@@ -16,7 +16,7 @@
                     <div class="home-products">
                         {% for product in category.get_most_sold_products %}
                         <div class="home-product">
-                            <h3><a href="#">{{ product.name }}</a></h3>
+                            <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
                             <div class="home-product-img">
                                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
                             </div>

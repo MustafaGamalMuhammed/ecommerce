@@ -14,6 +14,7 @@
                 </div>
                 <div class="product-details">
                     <h2 v-html="product.name"></h2>
+                    <p class="product-seller">Seller: <a :href="product.seller_url" v-html="product.seller_name"></a></p>
                     <p class="product-price">Price: <span v-html="product.price"></span></p>
                     <p class="product-rating">Rating <span v-html="product.rating"></span></p>
                     <div v-if="product.is_authenticated" class="product-actions">

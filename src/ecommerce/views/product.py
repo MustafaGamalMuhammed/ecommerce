@@ -19,6 +19,8 @@ def get_product_data(request, product):
     d['available'] = product.available
     d['url'] = product.get_absolute_url()
     d['description'] = product.description
+    d['seller_name'] = product.seller.user.username
+    d['seller_url'] = product.seller.get_absolute_url()
     d['is_authenticated'] = request.user.is_authenticated
 
     if request.user.is_authenticated:

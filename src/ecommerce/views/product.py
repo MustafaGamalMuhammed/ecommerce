@@ -9,33 +9,6 @@ from rest_framework import status
 from ecommerce.models import Product, Category, ProductReview
 
 
-def get_product_data(request, product):
-    d = {}
-    d['id'] = product.id
-    d['name'] = product.name
-    d['rating'] = product.rating
-    d['price'] = product.price
-    d['image'] = product.image.url
-    d['available'] = product.available
-    d['url'] = product.get_absolute_url()
-    d['description'] = product.description
-    d['seller_name'] = product.seller.user.username
-    d['seller_url'] = product.seller.get_absolute_url()
-    d['is_authenticated'] = request.user.is_authenticated
-
-    if request.user.is_authenticated:
-        d['is_liked'] = product in request.user.profile.likes.all()
-        d['is_in_cart'] = request.user.profile.cart.has_product(product)
-    
-    d['reviews'] = []
-
-    for review in product.reviews.all():
-        r = get_review_data(review)    
-        d['reviews'].append(r)
-
-    return d
-
-
 def get_products_data(request:HttpRequest):
     params = request.GET.dict()
     
@@ -46,20 +19,9 @@ def get_products_data(request:HttpRequest):
     data = []
 
     for product in products:
-        d = get_product_data(request, product)
-        data.append(d)
+        data.append(product.get_data(request))
 
     return data
-
-
-def get_review_data(review):
-    r = {}
-    r['id'] = review.id
-    r['username'] = review.user.username
-    r['rating'] = review.rating
-    r['content'] = review.content
-
-    return r
 
 
 def get_page_data(request:HttpRequest):
@@ -98,7 +60,7 @@ def products(request:HttpRequest):
 def get_product(request, id):
     try:
         product = get_object_or_404(Product, id=id)
-        data = get_product_data(request, product)
+        data = product.get_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
     except Product.DoesNotExist:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
@@ -114,7 +76,7 @@ def post_review(request):
         content = request.data.get('content')
 
         review = ProductReview.objects.create(user_id=user_id, product_id=product_id, rating=rating, content=content)
-        data = get_review_data(review)
+        data = review.get_data()
         return Response(data=data, status=status.HTTP_200_OK)
     except (TypeError, django.core.exceptions.FieldError):
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

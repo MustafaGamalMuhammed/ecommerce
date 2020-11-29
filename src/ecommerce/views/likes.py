@@ -4,7 +4,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ecommerce.models import Profile, Product, Category
-from .product import get_product_data
 
 
 def get_likes_data(request):
@@ -13,7 +12,7 @@ def get_likes_data(request):
     data['products'] = []
 
     for product in request.user.profile.likes.all():
-        d = get_product_data(request, product)
+        d = product.get_data(request)
         data['products'].append(d)
 
     return data

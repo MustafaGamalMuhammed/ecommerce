@@ -4,7 +4,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ecommerce.models import Product, Category, CartItem
-from .product import get_product_data
 
 
 def get_cart_data(request):
@@ -18,8 +17,7 @@ def get_cart_data(request):
         d['id'] = item.id
         d['quantity'] = item.quantity
         d['delete'] = False
-        d['product'] = get_product_data(request, item.product)
-        d['total_price'] = item.total_price
+        d['product'] = item.product.get_data(request)
         data['items'].append(d)
 
     return data

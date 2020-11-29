@@ -4,7 +4,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ecommerce.models import Profile, Category, Product
-from .product import get_product_data
 
 
 def get_profile_data(request, profile):
@@ -14,7 +13,7 @@ def get_profile_data(request, profile):
     data['products'] = []
 
     for product in profile.products.all():
-        d = get_product_data(request, product)
+        d = product.get_data(request)
         d['delete'] = False
         data['products'].append(d)
 

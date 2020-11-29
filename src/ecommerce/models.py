@@ -69,6 +69,32 @@ class Product(models.Model):
         else:
             return 0
 
+    def get_data(self, request):
+        d = {}
+        d['id'] = self.id
+        d['name'] = self.name
+        d['rating'] = self.rating
+        d['price'] = self.price
+        d['image'] = self.image.url
+        d['available'] = self.available
+        d['url'] = self.get_absolute_url()
+        d['description'] = self.description
+        d['seller_name'] = self.seller.user.username
+        d['seller_url'] = self.seller.get_absolute_url()
+        d['is_authenticated'] = request.user.is_authenticated
+
+        if request.user.is_authenticated:
+            d['is_liked'] = self in request.user.profile.likes.all()
+            d['is_in_cart'] = request.user.profile.cart.has_product(self)
+        
+        d['reviews'] = []
+
+        for review in self.reviews.all():
+            r = review.get_data()    
+            d['reviews'].append(r)
+
+        return d
+
     def save(self, *args, **kwargs):
         super(Product, self).save(*args, **kwargs)
 
@@ -89,6 +115,14 @@ class ProductReview(models.Model):
     def __str__(self):
         return f"{self.user.username}'s review, {self.content[:30]}..."
 
+    def get_data(self):
+        d = {}
+        d['id'] = self.id
+        d['username'] = self.user.username
+        d['rating'] = self.rating
+        d['content'] = self.content
+
+        return d
 
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

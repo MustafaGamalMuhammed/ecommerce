@@ -8,7 +8,8 @@ def shop(request):
     }
 
     if request.GET.get('subcategory__name'):
-        subcategory = get_object_or_404(Subcategory, name=request.GET.get('subcategory__name'))
+        name = request.GET.get('subcategory__name')
+        subcategory = get_object_or_404(Subcategory, name=name)
         context['subcategory'] = subcategory
 
     return render(request, 'ecommerce/shop.html', context=context)

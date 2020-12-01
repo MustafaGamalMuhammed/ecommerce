@@ -27,20 +27,20 @@
         </div>
     </main>
     <div class="reviews">
-        {% if user.is_authenticated %}
-        <form id="review">
-            <input type="hidden" name="user_id" value="{{ user.id }}">
-            <input type="hidden" name="product_id" :value="product.id">
-            <input type="number" name="rating" min="0" max="5" value="0">
-            <textarea name="content" cols="60" rows="6"></textarea>
-            <input type="submit" value="Submit" @click.prevent="submitReview">
-        </form>
+        <div v-if="product.is_authenticated">
+            <form id="review">
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <input type="hidden" name="product_id" :value="product.id">
+                <input type="number" name="rating" min="0" max="5" value="0">
+                <textarea name="content" cols="60" rows="6"></textarea>
+                <input type="submit" value="Submit" @click.prevent="submitReview">
+            </form>
+        </div>
         <div v-for="review in product.reviews" class="review">
             <p v-html="review.username"></p>
             <p>rating: <span v-html="review.rating"></span></p>
             <p v-html="review.content"></p>
         </div>
-        {% endif %}
     </div>
 </div>
 {% endblock content %}

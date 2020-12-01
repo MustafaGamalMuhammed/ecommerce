@@ -11,7 +11,7 @@ from ecommerce.models import Product, Category, ProductReview
 from ecommerce.forms import ProductForm
 
 
-def get_products_data(request:HttpRequest):
+def get_products_data(request):
     params = request.GET.dict()
     
     if params.get('page'):
@@ -26,19 +26,18 @@ def get_products_data(request:HttpRequest):
     return data
 
 
-def get_page_data(request:HttpRequest):
-    page_data = dict()
+def get_page_data(request):
+    data = dict()
     page = int(request.GET.get('page', 1))
     paginator = Paginator(get_products_data(request), 9)
-
     products_page = paginator.get_page(page)
 
-    page_data['page'] = page
-    page_data['products'] = products_page.object_list
-    page_data['has_previous'] = products_page.has_previous()
-    page_data['has_next'] = products_page.has_next()
+    data['page'] = page
+    data['products'] = products_page.object_list
+    data['has_previous'] = products_page.has_previous()
+    data['has_next'] = products_page.has_next()
 
-    return page_data
+    return data
 
 
 def product(request, id):
@@ -50,7 +49,7 @@ def product(request, id):
 
 
 @api_view(['GET'])
-def products(request:HttpRequest):
+def products(request):
     try:
         data = get_page_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
@@ -72,11 +71,13 @@ def get_product(request, id):
 @require_POST
 def post_product(request):
     form = ProductForm(request.POST, request.FILES)
+    
     if form.is_valid():
-        product = Product.objects.create(seller_id=int(request.POST.get('seller_id')), **form.cleaned_data)
+        product = Product.objects.create(
+            seller_id=int(request.POST.get('seller_id')), 
+            **form.cleaned_data)
     
     return redirect(request.user.profile)    
-
 
 
 @login_required
@@ -88,7 +89,11 @@ def post_review(request):
         rating = int(request.data.get('rating'))
         content = request.data.get('content')
 
-        review = ProductReview.objects.create(user_id=user_id, product_id=product_id, rating=rating, content=content)
+        review = ProductReview.objects.create(
+            user_id=user_id, 
+            product_id=product_id, 
+            rating=rating, 
+            content=content)
         data = review.get_data()
         return Response(data=data, status=status.HTTP_200_OK)
     except (TypeError, django.core.exceptions.FieldError):

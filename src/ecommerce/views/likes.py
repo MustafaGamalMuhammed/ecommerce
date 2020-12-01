@@ -45,3 +45,4 @@ def get_likes(request):
     data = get_likes_data(request)
     
     return Response(data=data, status=status.HTTP_200_OK)
+    

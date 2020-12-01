@@ -23,3 +23,16 @@
     display: block;
     margin: 5px 0;
 }
+
+.update-profile button,
+.update-cart button {
+    margin: 5px 0;
+    border: 1px solid black;
+    background-color: burlywood;
+    padding: 5px 10px;
+}
+
+.update-profile button:hover,
+.update-cart button:hover {
+    cursor: pointer;
+}

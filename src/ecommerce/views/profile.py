@@ -9,8 +9,13 @@ from ecommerce.forms import ProductForm
 
 def get_profile_data(request, profile):
     data = {}
-    data['user_profile'] = (request.user.profile == profile)
-    data['id'] = profile.id
+    
+    if request.user.is_authenticated:
+        data['user_profile'] = (request.user.profile == profile)
+        data['id'] = profile.id
+    else:
+        data['user_profile'] = False
+
     data['username'] = profile.user.username
     data['products'] = []
 

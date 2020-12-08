@@ -41,16 +41,18 @@ def add_to_cart(request, id):
         request.user.profile.cart.items.create(product=product)
         data = get_cart_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
-    except Product.DoesNotExist:
+    except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @login_required
 @api_view(['GET'])
 def get_cart(request):
-    data = get_cart_data(request)
-
-    return Response(data=data, status=status.HTTP_200_OK)
+    try:
+        data = get_cart_data(request)
+        return Response(data=data, status=status.HTTP_200_OK)
+    except:
+        return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @login_required
@@ -68,5 +70,5 @@ def update_cart(request):
 
         data = get_cart_data(request)        
         return Response(data=data, status=status.HTTP_200_OK)
-    except CartItem.DoesNotExist:
+    except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

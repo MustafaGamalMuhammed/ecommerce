@@ -35,14 +35,15 @@ def like(request, id):
         request.user.profile.likes.add(product)
         data = get_likes_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
-    except Product.DoesNotExist:
+    except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @login_required
 @api_view(['GET'])
 def get_likes(request):
-    data = get_likes_data(request)
-    
-    return Response(data=data, status=status.HTTP_200_OK)
-    
+    try:
+        data = get_likes_data(request)
+        return Response(data=data, status=status.HTTP_200_OK)
+    except:
+        return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

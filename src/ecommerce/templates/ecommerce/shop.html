@@ -19,22 +19,22 @@
         </div>
         <div class="right">
             <h2>{{ subcategory.name }}</h2>
-            <div class="pagination">
-                <table>
-                    <tr>
-                        <td>
-                            <button v-if="page.has_previous" @click=getPreviousPage>&lt;</button>
-                        </td>
-                        <td>
-                            <span v-html="page.page"></span>
-                        </td>
-                        <td>
-                            <button v-if="page.has_next" @click="getNextPage">&gt;</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
             <div class="products">
+                <div class="pagination">
+                    <table>
+                        <tr>
+                            <td>
+                                <button v-if="page.has_previous" @click=getPreviousPage>&lt;</button>
+                            </td>
+                            <td>
+                                <span v-html="page.page"></span>
+                            </td>
+                            <td>
+                                <button v-if="page.has_next" @click="getNextPage">&gt;</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
                 <div  v-for="product in page.products" class="product">
                     <div class="product-img">
                         <a :href="product.url">
@@ -53,9 +53,19 @@
                     </div>
                 </div>
                 <div class="pagination">
-                    <button v-if="page.has_previous" @click=getPreviousPage>&lt;</button>
-                    <span v-html="page.page"></span>
-                    <button v-if="page.has_next" @click="getNextPage">&gt;</button>
+                    <table>
+                        <tr>
+                            <td>
+                                <button v-if="page.has_previous" @click=getPreviousPage>&lt;</button>
+                            </td>
+                            <td>
+                                <span v-html="page.page"></span>
+                            </td>
+                            <td>
+                                <button v-if="page.has_next" @click="getNextPage">&gt;</button>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

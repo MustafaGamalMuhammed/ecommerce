@@ -42,7 +42,7 @@ def get_profile(request, id):
         profile = get_object_or_404(Profile, id=id)
         data = get_profile_data(request, profile)
         return Response(data=data, status=status.HTTP_200_OK)
-    except Profile.DoesNotExist:
+    except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -61,5 +61,5 @@ def update_profile(request):
 
         data = get_profile_data(request, request.user.profile)        
         return Response(data=data, status=status.HTTP_200_OK)
-    except Product.DoesNotExist:
+    except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

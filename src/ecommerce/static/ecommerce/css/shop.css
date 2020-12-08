@@ -58,14 +58,23 @@
 }
 
 .pagination {
-    text-align: center;
     padding: 5px;
     font-size: 20px;
 }
 
+.pagination table {
+    margin: auto;
+}
+
+.pagination table td {
+    width: 25px;
+}
+
 .pagination button,
 .pagination span {
-    display: inline-block;
+    display: block;
+    margin: auto;
+    text-align: center;
 }
 
 .pagination button {

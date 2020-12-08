@@ -9,6 +9,7 @@ const app = new Vue({
             likes: null,
             product: null,
             profile: null,
+            isCartUpdated: false,
         };
     },
     methods: {
@@ -98,8 +99,8 @@ const app = new Vue({
         updateCart: function(e) {
             axios.post('/update_cart/', data=this.cart)
             .then(res => {
-                console.log(res.data);
                 this.cart = res.data;
+                this.isCartUpdated = true;
             })
             .catch(err => console.log(err))
         },

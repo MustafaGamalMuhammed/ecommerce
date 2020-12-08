@@ -24,3 +24,21 @@
     text-decoration: line-through;
     color: red;
 }
+
+.is-cart-updated {
+    color: crimson;
+}
+
+.delete-cart-item {
+    display: block;
+    margin: auto;
+    border: 1px solid black;
+    padding: 5px 10px;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+}
+
+.delete-cart-item:hover {
+    cursor: pointer;
+}

@@ -37,7 +37,7 @@
                             <p v-html="item.product.price * item.quantity"></p>
                         </div>
                         <div class="cart-item-delete">
-                            <button @click="deleteCartItem(item)">Delete</button>
+                            <button @click="deleteCartItem(item)" class="delete-cart-item">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -45,6 +45,7 @@
                     <h2>Total Price: <span v-html="cartTotalPrice"></span></h2>
                 </div>
                 <div class="update-cart">
+                    <p v-if="isCartUpdated" class="is-cart-updated">Cart Is Updated</p>
                     <button @click="updateCart">Update Cart</button>
                 </div>
             </div>

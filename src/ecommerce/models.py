@@ -13,22 +13,24 @@ class Category(models.Model):
         return self.name
 
     def get_most_sold_products(self):
-        products = None
+        products = []
 
         for subcategory in self.subcategories.all():
-            if products == None:
-                products = subcategory.get_most_sold_products()
+            if products:
+                products = (products | subcategory.products.all())
             else:
-                products = (products | subcategory.get_most_sold_products())
+                products = subcategory.products.all()
 
         if products:
             return products.order_by('-sold')[:5]
         else:
-            return []
+            return products
+
 
 class Subcategory(models.Model):
     name = models.CharField(max_length=150)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="subcategories")
+    category = models.ForeignKey(
+    Category, on_delete=models.CASCADE, related_name="subcategories")
 
     def __str__(self):
         return f"{self.category.name} => {self.name}"
@@ -36,16 +38,17 @@ class Subcategory(models.Model):
     def get_absolute_url(self):
         return reverse("shop") + f"?subcategory__name={self.name}"
 
-    def get_most_sold_products(self):
-        products = self.products.order_by('-sold')
-        return products
-
 
 class Product(models.Model):
     name = models.CharField(max_length=150)
-    seller = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="products")
-    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name="products")
-    price = models.DecimalField(max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    seller = models.ForeignKey(
+            "Profile", on_delete=models.CASCADE, related_name="products")
+    subcategory = models.ForeignKey(
+            Subcategory, on_delete=models.CASCADE, related_name="products")
+    price = models.DecimalField(
+            max_digits=7,
+            decimal_places=2,
+            validators=[MinValueValidator(Decimal('0.01'))])
     image = models.ImageField(upload_to="product_images", default="default.jpg")
     available = models.PositiveIntegerField(default=0)
     sold = models.PositiveIntegerField(default=0)
@@ -86,11 +89,11 @@ class Product(models.Model):
         if request.user.is_authenticated:
             d['is_liked'] = self in request.user.profile.likes.all()
             d['is_in_cart'] = request.user.profile.cart.has_product(self)
-        
+
         d['reviews'] = []
 
         for review in self.reviews.all():
-            r = review.get_data()    
+            r = review.get_data()
             d['reviews'].append(r)
 
         return d
@@ -108,8 +111,15 @@ class Product(models.Model):
 
 class ProductReview(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews", null=True, blank=True)
-    rating = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    product = models.ForeignKey(
+            Product,
+            on_delete=models.CASCADE,
+            related_name="reviews",
+            null=True,
+            blank=True)
+    rating = models.PositiveIntegerField(
+            default=0,
+            validators=[MinValueValidator(0), MaxValueValidator(5)])
     content = models.TextField()
 
     def __str__(self):
@@ -164,7 +174,11 @@ class Cart(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    cart = models.OneToOneField(Cart, null=True, on_delete=models.SET_NULL, related_name="profile")
+    cart = models.OneToOneField(
+            Cart,
+            null=True,
+            on_delete=models.SET_NULL,
+            related_name="profile")
     likes = models.ManyToManyField(Product, blank=True)
 
     def __str__(self):

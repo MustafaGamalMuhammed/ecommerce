@@ -1,5 +1,5 @@
 import django
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -10,18 +10,23 @@ from ecommerce.models import Product, Category, CartItem
 def get_cart_data(request):
     data = {}
     data['items_count'] = request.user.profile.cart.items.count()
-    data['total_price'] = request.user.profile.cart.total_price
     data['items'] = []
 
     for item in request.user.profile.cart.items.all():
-        d = {}
-        d['id'] = item.id
-        d['quantity'] = item.quantity
-        d['delete'] = False
-        d['product'] = item.product.get_data(request)
-        data['items'].append(d)
+        data['items'].append(item.get_data(request))
 
     return data
+
+
+def update_cart_items(request):
+    for item in request.data['items']:
+        cart_item = CartItem.objects.get(id=int(item['id']))
+
+        if item.get('delete', False):
+            cart_item.delete()
+        else:
+            cart_item.quantity = int(item['quantity'])
+            cart_item.save()
 
 
 @login_required
@@ -37,10 +42,10 @@ def cart(request):
 @api_view(['POST'])
 def add_to_cart(request, id):
     try:
-        product = get_object_or_404(Product, id=id)
+        product = Product.objects.get(id=id)
         request.user.profile.cart.items.create(product=product)
         data = get_cart_data(request)
-        return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_OK)
     except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -58,17 +63,9 @@ def get_cart(request):
 @login_required
 @api_view(['POST'])
 def update_cart(request):
-    try:    
-        for item in request.data['items']:
-            cart_item = CartItem.objects.get(id=int(item['id']))
-            
-            if item.get('delete', False):
-                cart_item.delete()
-            else:
-                cart_item.quantity = int(item['quantity'])
-                cart_item.save()
-
-        data = get_cart_data(request)        
-        return Response(data=data, status=status.HTTP_200_OK)
+    try:
+        update_cart_items(request)
+        data = get_cart_data(request)
+        return Response(data=data, status=status.HTTP_201_CREATED)
     except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

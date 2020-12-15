@@ -100,7 +100,7 @@ class Product(models.Model):
 
         im = Image.open(self.image)
         width, height = im.size
-        
+
         if width > 300 or height > 300:
             im.thumbnail((300, 300), Image.ANTIALIAS)
             im.save(self.image.path)
@@ -124,6 +124,7 @@ class ProductReview(models.Model):
 
         return d
 
+
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
@@ -131,6 +132,14 @@ class CartItem(models.Model):
     @property
     def total_price(self):
         return self.product.price * self.quantity
+
+    def get_data(self, request):
+        d = {}
+        d['id'] = self.id
+        d['quantity'] = self.quantity
+        d['delete'] = False
+        d['product'] = self.product.get_data(request)
+        return d
 
 
 class Cart(models.Model):
@@ -149,7 +158,7 @@ class Cart(models.Model):
         for item in self.items.all():
             if product.id == item.product.id:
                 return True
-        
+
         return False
 
 
@@ -163,3 +172,23 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         return reverse('profile', args=(self.id,))
+
+    def get_date(self, request):
+        data = {}
+
+        if request.user.is_authenticated:
+            data['user_profile'] = (request.user.profile == self)
+            data['id'] = self.id
+        else:
+            data['user_profile'] = False
+
+        data['username'] = self.user.username
+        data['products'] = []
+
+        for product in self.products.all():
+            d = product.get_data(request)
+            d['delete'] = False
+            data['products'].append(d)
+
+        return data
+

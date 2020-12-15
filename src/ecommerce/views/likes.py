@@ -31,7 +31,7 @@ def likes(request):
 @api_view(['POST'])
 def like(request, id):
     try:
-        product = get_object_or_404(Product, id=id)
+        product = Product.objects.get(id=id)
         request.user.profile.likes.add(product)
         data = get_likes_data(request)
         return Response(data=data, status=status.HTTP_200_OK)

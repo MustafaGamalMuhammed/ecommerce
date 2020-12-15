@@ -16,5 +16,5 @@ def signup(request):
     context = {
         'form': SignupForm(),
     }
-    
+
     return render(request, 'ecommerce/signup.html', context=context)

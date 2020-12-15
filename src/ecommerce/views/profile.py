@@ -7,24 +7,15 @@ from ecommerce.models import Profile, Category, Product
 from ecommerce.forms import ProductForm
 
 
-def get_profile_data(request, profile):
-    data = {}
-    
-    if request.user.is_authenticated:
-        data['user_profile'] = (request.user.profile == profile)
-        data['id'] = profile.id
-    else:
-        data['user_profile'] = False
+def update_profile_products(request):
+    for p in request.data['products']:
+        product = Product.objects.get(id=int(p['id']))
 
-    data['username'] = profile.user.username
-    data['products'] = []
-
-    for product in profile.products.all():
-        d = product.get_data(request)
-        d['delete'] = False
-        data['products'].append(d)
-
-    return data
+        if p.get('delete', False):
+            product.delete()
+        else:
+            product.available = int(p['available'])
+            product.save()
 
 
 def profile(request, id):
@@ -35,12 +26,12 @@ def profile(request, id):
 
     return render(request, 'ecommerce/profile.html', context=context)
 
-    
+
 @api_view(['GET'])
 def get_profile(request, id):
     try:
-        profile = get_object_or_404(Profile, id=id)
-        data = get_profile_data(request, profile)
+        profile = Profile.objects.get(id=id)
+        data = profile.get_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
     except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
@@ -50,16 +41,8 @@ def get_profile(request, id):
 @api_view(['POST'])
 def update_profile(request):
     try:
-        for p in request.data['products']:
-            product = Product.objects.get(id=int(p['id']))
-            
-            if p.get('delete', False):
-                product.delete()
-            else:
-                product.available = int(p['available'])
-                product.save()
-
-        data = get_profile_data(request, request.user.profile)        
+        update_profile_products(request)
+        data = get_profile_data(request, request.user.profile)
         return Response(data=data, status=status.HTTP_200_OK)
     except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

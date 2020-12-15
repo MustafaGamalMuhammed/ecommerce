@@ -1,6 +1,5 @@
 import django
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http.request import HttpRequest
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from django.contrib import messages
@@ -43,7 +42,7 @@ def get_page_data(request):
 
 def get_review_data_from_request(request):
     data = {}
-    data['user_id'] = int(request.data.get('user_id')) 
+    data['user_id'] = int(request.data.get('user_id'))
     data['product_id'] = int(request.data.get('product_id'))
     data['rating'] = int(request.data.get('rating'))
     data['content'] = request.data.get('content')
@@ -71,7 +70,7 @@ def products(request):
 @api_view(['GET'])
 def get_product(request, id):
     try:
-        product = get_object_or_404(Product, id=id)
+        product = Product.objects.get(id=id)
         data = product.get_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
     except:
@@ -83,10 +82,10 @@ def get_product(request, id):
 def post_product(request):
     try:
         form = ProductForm(request.POST, request.FILES)
-        
+
         if form.is_valid():
             product = Product.objects.create(
-                seller_id=int(request.POST.get('seller_id')), 
+                seller=request.user.profile,
                 **form.cleaned_data)
         else:
             for error in form.errors:
@@ -103,6 +102,6 @@ def post_review(request):
     try:
         review = ProductReview.objects.create(**get_review_data_from_request(request))
         data = review.get_data()
-        return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
     except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)

@@ -14,10 +14,10 @@ from ecommerce.forms import ProductForm
 
 def get_products_data(request):
     params = request.GET.dict()
-    
+
     if params.get('page'):
         params.pop('page')
-    
+
     products = Product.objects.filter(**params)
     data = []
 

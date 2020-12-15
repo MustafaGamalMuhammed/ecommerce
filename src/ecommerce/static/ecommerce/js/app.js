@@ -10,6 +10,7 @@ const app = new Vue({
             product: null,
             profile: null,
             isCartUpdated: false,
+            isProfileUpdate: false,
         };
     },
     methods: {
@@ -120,6 +121,7 @@ const app = new Vue({
             axios.post('/update_profile/', data=this.profile)
             .then(res => {
                 this.profile = res.data;
+                this.isProfileUpdated = true;
             })
             .catch(err => console.log(err))
         },

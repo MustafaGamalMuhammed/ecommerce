@@ -1,10 +1,10 @@
-import django
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ecommerce.models import Product, Category, CartItem
+from django.forms import modelform_factory
 
 
 def get_cart_data(request):
@@ -20,12 +20,13 @@ def get_cart_data(request):
 
 def update_cart_items(request):
     for item in request.data['items']:
-        cart_item = CartItem.objects.get(id=int(item['id']))
+        id, quantity = int(item['id']), int(item['quantity'])
+        cart_item = CartItem.objects.get(id=id)
 
         if item.get('delete', False):
             cart_item.delete()
         else:
-            cart_item.quantity = int(item['quantity'])
+            cart_item.quantity = quantity 
             cart_item.save()
 
 
@@ -45,7 +46,7 @@ def add_to_cart(request, id):
         product = Product.objects.get(id=id)
         request.user.profile.cart.items.create(product=product)
         data = get_cart_data(request)
-        return Response(data=data, status=status.HTTP_201_OK)
+        return Response(data=data, status=status.HTTP_201_CREATED)
     except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -56,7 +57,8 @@ def get_cart(request):
     try:
         data = get_cart_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
-    except:
+    except e:
+        print(e)
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
 

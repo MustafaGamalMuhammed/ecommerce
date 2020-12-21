@@ -1,5 +1,4 @@
-import django
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from django.contrib import messages
@@ -13,10 +12,7 @@ from ecommerce.forms import ProductForm
 
 def get_products_data(request):
     params = request.GET.dict()
-
-    if params.get('page'):
-        params.pop('page')
-
+    params.pop('page', 0)
     products = Product.objects.filter(**params)
     data = []
 
@@ -42,7 +38,7 @@ def get_page_data(request):
 
 def get_review_data_from_request(request):
     data = {}
-    data['user_id'] = int(request.data.get('user_id'))
+    data['profile'] = request.user.profile 
     data['product_id'] = int(request.data.get('product_id'))
     data['rating'] = int(request.data.get('rating'))
     data['content'] = request.data.get('content')
@@ -59,7 +55,7 @@ def product(request, id):
 
 
 @api_view(['GET'])
-def products(request):
+def get_products(request):
     try:
         data = get_page_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
@@ -84,9 +80,7 @@ def post_product(request):
         form = ProductForm(request.POST, request.FILES)
 
         if form.is_valid():
-            product = Product.objects.create(
-                seller=request.user.profile,
-                **form.cleaned_data)
+            Product.objects.create(seller=request.user.profile, **form.cleaned_data)
         else:
             for error in form.errors:
                 messages.error(request, form.errors[error])

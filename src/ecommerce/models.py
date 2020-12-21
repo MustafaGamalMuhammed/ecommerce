@@ -1,5 +1,6 @@
 from django.shortcuts import reverse
 from django.db import models
+from django.db.models import QuerySet
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from decimal import Decimal
@@ -7,36 +8,34 @@ from PIL import Image
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, unique=True)
 
     def __str__(self):
         return self.name
 
     def get_most_sold_products(self):
-        products = []
+        products = QuerySet(Product) 
 
         for subcategory in self.subcategories.all():
-            if products:
-                products = (products | subcategory.products.all())
-            else:
-                products = subcategory.products.all()
+            products = (products | subcategory.get_most_sold_products())
 
-        if products:
-            return products.order_by('-sold')[:5]
-        else:
-            return products
+        return products.order_by('-sold')[:5]
 
 
 class Subcategory(models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, unique=True)
     category = models.ForeignKey(
-    Category, on_delete=models.CASCADE, related_name="subcategories")
+        Category, on_delete=models.CASCADE, related_name="subcategories")
 
     def __str__(self):
         return f"{self.category.name} => {self.name}"
 
     def get_absolute_url(self):
         return reverse("shop") + f"?subcategory__name={self.name}"
+
+    def get_most_sold_products(self):
+        products = self.products.order_by('-sold')[:5]
+        return products 
 
 
 class Product(models.Model):
@@ -67,7 +66,7 @@ class Product(models.Model):
         for review in self.reviews.all():
             result += review.rating
 
-        if result:
+        if self.reviews.exists():
             return result / self.reviews.count()
         else:
             return 0
@@ -85,16 +84,14 @@ class Product(models.Model):
         d['seller_name'] = self.seller.user.username
         d['seller_url'] = self.seller.get_absolute_url()
         d['is_authenticated'] = request.user.is_authenticated
-
-        if request.user.is_authenticated:
-            d['is_liked'] = self in request.user.profile.likes.all()
-            d['is_in_cart'] = request.user.profile.cart.has_product(self)
-
         d['reviews'] = []
 
+        if request.user.is_authenticated:
+            d['is_liked'] = request.user.profile.does_like_product(self)
+            d['is_in_cart'] = request.user.profile.cart.has_product(self)
+
         for review in self.reviews.all():
-            r = review.get_data()
-            d['reviews'].append(r)
+            d['reviews'].append(review.get_data())
 
         return d
 
@@ -110,7 +107,7 @@ class Product(models.Model):
 
 
 class ProductReview(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
     product = models.ForeignKey(
             Product,
             on_delete=models.CASCADE,
@@ -123,12 +120,12 @@ class ProductReview(models.Model):
     content = models.TextField()
 
     def __str__(self):
-        return f"{self.user.username}'s review, {self.content[:30]}..."
+        return f"{self.profile.user.username}'s review, {self.content[:30]}..."
 
     def get_data(self):
         d = {}
         d['id'] = self.id
-        d['username'] = self.user.username
+        d['username'] = self.profile.user.username
         d['rating'] = self.rating
         d['content'] = self.content
 
@@ -165,11 +162,7 @@ class Cart(models.Model):
         return total
 
     def has_product(self, product):
-        for item in self.items.all():
-            if product.id == item.product.id:
-                return True
-
-        return False
+        return self.items.filter(product=product).exists()
 
 
 class Profile(models.Model):
@@ -187,7 +180,10 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse('profile', args=(self.id,))
 
-    def get_date(self, request):
+    def does_like_product(self, product):
+        return product in self.likes.all()
+
+    def get_data(self, request):
         data = {}
 
         if request.user.is_authenticated:

@@ -22,7 +22,7 @@ const app = new Vue({
                 params = `?${params.toString()}`;
             }
             
-            axios.get(`/products/${params}`)
+            axios.get(`/get_products/${params}`)
             .then(res => {
                 this.page = res.data;
             })
@@ -30,7 +30,7 @@ const app = new Vue({
                 console.log(err);
             })
         },
-        submitFilters: function(e) {
+        submitFilters: function() {
             let form = document.getElementById("filters");
             let data = new FormData(form);
             let params = new URLSearchParams(data);
@@ -87,7 +87,7 @@ const app = new Vue({
             })
             .catch(err => console.log(err))
         },
-        submitReview: function(e) {
+        submitReview: function() {
             let form = document.getElementById("review");
             let data = new FormData(form);
             
@@ -97,7 +97,7 @@ const app = new Vue({
             })
             .catch(err => console.log(err))
         },
-        updateCart: function(e) {
+        updateCart: function() {
             axios.post('/update_cart/', data=this.cart)
             .then(res => {
                 this.cart = res.data;
@@ -170,5 +170,4 @@ const app = new Vue({
             return total
         }
     },
-    watch: {},
 });

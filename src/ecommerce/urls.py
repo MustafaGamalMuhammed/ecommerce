@@ -18,7 +18,7 @@ shop_urlpatterns = [
 
 product_urlpatterns = [
     path('product/<int:id>/', views.product, name="product"),
-    path('products/', views.products, name="products"),
+    path('get_products/', views.get_products, name="products"),
     path('get_product/<int:id>/', views.get_product, name="get_product"),
     path('post_review/', views.post_review, name="post_review"),
     path('post_product/', views.post_product, name="post_product"),

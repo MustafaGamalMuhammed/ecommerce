@@ -7,6 +7,15 @@
         <div class="left">
             {% include './categories-links.html' %}
         </div>
+        <div>
+          <form method="POST">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            {% for form in formset %}
+              {{ form }}
+            {% endfor %}
+          </form>
+        </div>
         <div class="right">
             <h2>Cart</h2>
             <div class="products">

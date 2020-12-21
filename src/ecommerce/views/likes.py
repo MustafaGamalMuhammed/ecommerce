@@ -42,8 +42,5 @@ def like(request, id):
 @login_required
 @api_view(['GET'])
 def get_likes(request):
-    try:
-        data = get_likes_data(request)
-        return Response(data=data, status=status.HTTP_200_OK)
-    except:
-        return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
+    data = get_likes_data(request)
+    return Response(data=data, status=status.HTTP_200_OK)

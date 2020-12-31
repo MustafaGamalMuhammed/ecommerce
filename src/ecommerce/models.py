@@ -1,5 +1,6 @@
 from django.shortcuts import reverse
 from django.db import models
+from django.db.models import Sum
 from django.db.models import QuerySet
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
@@ -25,7 +26,9 @@ class Category(models.Model):
 class Subcategory(models.Model):
     name = models.CharField(max_length=150, unique=True)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="subcategories")
+        Category, 
+        on_delete=models.CASCADE, 
+        related_name="subcategories")
 
     def __str__(self):
         return f"{self.category.name} => {self.name}"
@@ -41,9 +44,13 @@ class Subcategory(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=150)
     seller = models.ForeignKey(
-            "Profile", on_delete=models.CASCADE, related_name="products")
+            "Profile", 
+            on_delete=models.CASCADE, 
+            related_name="products")
     subcategory = models.ForeignKey(
-            Subcategory, on_delete=models.CASCADE, related_name="products")
+            Subcategory, 
+            on_delete=models.CASCADE, 
+            related_name="products")
     price = models.DecimalField(
             max_digits=7,
             decimal_places=2,
@@ -61,13 +68,9 @@ class Product(models.Model):
 
     @property
     def rating(self):
-        result = 0
-
-        for review in self.reviews.all():
-            result += review.rating
-
         if self.reviews.exists():
-            return result / self.reviews.count()
+            s = self.reviews.aggregate(s=Sum('rating'))['s']
+            return s / self.reviews.count()
         else:
             return 0
 
@@ -84,14 +87,12 @@ class Product(models.Model):
         d['seller_name'] = self.seller.user.username
         d['seller_url'] = self.seller.get_absolute_url()
         d['is_authenticated'] = request.user.is_authenticated
-        d['reviews'] = []
+        d['reviews'] = [review.get_data() for review in self.reviews.all()]
+        d['delete'] = False
 
         if request.user.is_authenticated:
             d['is_liked'] = request.user.profile.does_like_product(self)
             d['is_in_cart'] = request.user.profile.cart.has_product(self)
-
-        for review in self.reviews.all():
-            d['reviews'].append(review.get_data())
 
         return d
 
@@ -132,25 +133,39 @@ class ProductReview(models.Model):
         return d
 
 
-class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(Product, blank=True)
 
-    @property
-    def total_price(self):
-        return self.product.price * self.quantity
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
+    def get_absolute_url(self):
+        return reverse('profile', args=(self.id,))
+
+    def does_like_product(self, product):
+        return product in self.likes.all()
 
     def get_data(self, request):
-        d = {}
-        d['id'] = self.id
-        d['quantity'] = self.quantity
-        d['delete'] = False
-        d['product'] = self.product.get_data(request)
-        return d
+        data = {}
+        data['id'] = self.id
+        data['user_profile'] = request.user.is_authenticated and \
+            (request.user.profile == self)
+        data['username'] = self.user.username
+        data['products'] = [product.get_data(request) for 
+            product in self.products.all()]
+
+        return data
 
 
 class Cart(models.Model):
-    items = models.ManyToManyField(CartItem, blank=True)
+    profile = models.OneToOneField(
+            Profile, 
+            on_delete=models.CASCADE, 
+            null=True)
+
+    def __str__(self):
+        return f"{self.profile.user.username}'s cart"
 
     @property
     def total_price(self):
@@ -165,40 +180,23 @@ class Cart(models.Model):
         return self.items.filter(product=product).exists()
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    cart = models.OneToOneField(
-            Cart,
+class CartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    cart = models.ForeignKey(
+            Cart, 
+            on_delete=models.CASCADE, 
             null=True,
-            on_delete=models.SET_NULL,
-            related_name="profile")
-    likes = models.ManyToManyField(Product, blank=True)
+            related_name="items")
 
-    def __str__(self):
-        return f"{self.user.username}'s profile"
-
-    def get_absolute_url(self):
-        return reverse('profile', args=(self.id,))
-
-    def does_like_product(self, product):
-        return product in self.likes.all()
+    @property
+    def total_price(self):
+        return self.product.price * self.quantity
 
     def get_data(self, request):
-        data = {}
-
-        if request.user.is_authenticated:
-            data['user_profile'] = (request.user.profile == self)
-            data['id'] = self.id
-        else:
-            data['user_profile'] = False
-
-        data['username'] = self.user.username
-        data['products'] = []
-
-        for product in self.products.all():
-            d = product.get_data(request)
-            d['delete'] = False
-            data['products'].append(d)
-
-        return data
-
+        d = {}
+        d['id'] = self.id
+        d['quantity'] = self.quantity
+        d['delete'] = False
+        d['product'] = self.product.get_data(request)
+        return d

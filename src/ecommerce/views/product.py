@@ -14,10 +14,7 @@ def get_products_data(request):
     params = request.GET.dict()
     params.pop('page', 0)
     products = Product.objects.filter(**params)
-    data = []
-
-    for product in products:
-        data.append(product.get_data(request))
+    data = [product.get_data(request) for product in products]
 
     return data
 

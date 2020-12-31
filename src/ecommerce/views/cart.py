@@ -4,7 +4,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ecommerce.models import Product, Category, CartItem
-from django.forms import modelform_factory
 
 
 def get_cart_data(request):
@@ -57,8 +56,7 @@ def get_cart(request):
     try:
         data = get_cart_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
-    except e:
-        print(e)
+    except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
 
 

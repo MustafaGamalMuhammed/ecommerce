@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -42,7 +42,7 @@ def get_profile(request, id):
 def update_profile(request):
     try:
         update_profile_products(request)
-        data = get_profile_data(request, request.user.profile)
+        data = request.user.profile.get_data(request)
         return Response(data=data, status=status.HTTP_200_OK)
     except:
         return Response(data={}, status=status.HTTP_400_BAD_REQUEST)
